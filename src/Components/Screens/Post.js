@@ -14,10 +14,11 @@ import CustomHeader from "../Layout/CustomHeader";
 import font from "../../Theme/font";
 import colors from "../../Theme/colors";
 import Axios from "axios";
+import { getCurrentGreeting } from "../../util/functions";
+import AsyncStorage from "@react-native-community/async-storage";
 
 const Post = () => {
   const [posts, setPosts] = useState([]);
-  console.log("posts", posts);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,6 +59,20 @@ const Post = () => {
     ]);
   }, []);
 
+  const getPosts = async () => {
+    try {
+      const todo = await AsyncStorage.getItem("userPost");
+      const posts = JSON.parse(todo);
+      setPosts(posts);
+    } catch (error) {
+      ToastAndroid.show(error.message, ToastAndroid.LONG);
+    }
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
   // const getPosts = async () => {
   // 	try {
   // 		setLoading(true)
@@ -80,12 +95,17 @@ const Post = () => {
       setLoading(true);
 
       const data = {
+		id: Math.random(),
         title,
         body: description,
       };
       const result = await Axios.post(
         "https://jsonplaceholder.typicode.com/posts",
         data
+      );
+	  await AsyncStorage.setItem(
+        "userPost",
+        JSON.stringify([result.data, ...posts])
       );
       setPosts([result.data, ...posts]);
       setLoading(false);
@@ -110,7 +130,7 @@ const Post = () => {
           }}
         >
           <View>
-            <Text style={styles.userText}>Hello User</Text>
+            <Text style={styles.userText}>{getCurrentGreeting()}</Text>
             <Text style={[styles.userText, { fontSize: 14 }]}>
               Articles you may interest to read, or you can add one
             </Text>
@@ -132,11 +152,11 @@ const Post = () => {
             />
           </Item>
           <Button
-            onPress={addPost}
+            onPress={()=> addPost}
             style={{
               justifyContent: "center",
               height: 40,
-              backgroundColor: colors.purple,
+              backgroundColor: colors.grey,
               marginTop: 10,
               borderRadius: 5,
             }}
@@ -160,7 +180,7 @@ const Post = () => {
                         fontFamily: font.PoppinsBold,
                       }}
                     >
-                      {post.title.toUpperCase()}
+                      {post.title?.toUpperCase()}
                     </Text>
                   </CardItem>
                   <CardItem style={[styles.cardItemTodo]}>
@@ -187,7 +207,7 @@ const Post = () => {
       {modalVisible && 
         <Modal animationType="fade" >
           <View style={{ height:'100%', padding: 10 }}>
-            <TouchableOpacity onPress={()=>setModalVisible(null)} hitSlop={20}><Icon name="close" style={{marginLeft:'auto', marginBottom:10}}/></TouchableOpacity>
+            <TouchableOpacity onPress={()=>setModalVisible(null)} hitSlop={20}><Icon name="close" type="FontAwesome" style={{marginLeft:'auto', marginBottom:10}}/></TouchableOpacity>
             <Text numberOfLines={3} style={{fontWeight:'600', color:'#000000'}}>{modalVisible.title}</Text>
             <Text  style={{color:'#000000', marginTop:40, textAlign:'justify'}}>{modalVisible.body}</Text>
           </View>
@@ -201,6 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontFamily: font.PoppinsBold,
     color: colors.white,
+	marginTop: 5
   },
   userTextContainer: {
     paddingHorizontal: 20,
