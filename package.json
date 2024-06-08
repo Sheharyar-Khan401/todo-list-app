@@ -9,12 +9,20 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@babel/plugin-transform-template-literals": "^7.24.7",
+    "@react-native-community/async-storage": "^1.12.1",
+    "axios": "^1.7.2",
     "expo": "~51.0.11",
     "expo-status-bar": "~1.12.1",
     "native-base": "^2.13.8",
     "react": "18.2.0",
     "react-native": "0.74.2",
-    "react-native-reanimated": "^1.13.4"
+    "react-native-gesture-handler": "^2.9.0",
+    "react-native-reanimated": "3.4.2",
+    "react-native-screens": "^2.16.0",
+    "react-navigation": "^4.0.10",
+    "react-navigation-tabs": "^2.11.2",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
