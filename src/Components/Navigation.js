@@ -38,20 +38,7 @@ const AppNavigation = createBottomTabNavigator(
 					/>
 				),
 			},
-		},
-		// Location: {
-		// 	screen: Location,
-		// 	navigationOptions: {
-		// 		tabBarLabel: 'Location',
-		// 		tabBarIcon: ({ tintColor }) => (
-		// 			<Icon
-		// 				type='FontAwesome5'
-		// 				name='map-marker'
-		// 				style={{ color: tintColor, fontSize: 23 }}
-		// 			/>
-		// 		),
-		// 	},
-		// },
+		}
 	},
 	{
 		tabBarOptions: {

@@ -51,6 +51,10 @@ const Home = () => {
 
 	const addTodo = async () => {
 		try {
+			if(newTodoName === ""){
+				ToastAndroid.show("Add to-do text to add", ToastAndroid.LONG);
+				return;
+			}
 			const newTodo = {
 				id: uuid(),
 				name: newTodoName,

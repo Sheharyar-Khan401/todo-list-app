@@ -7,8 +7,9 @@ import {
   ToastAndroid,
   ActivityIndicator,
   TouchableOpacity,
+  Modal,
 } from "react-native";
-import { Item, Input, Card, CardItem, Text, Button } from "native-base";
+import { Item, Input, Card, CardItem, Text, Button, Icon } from "native-base";
 import CustomHeader from "../Layout/CustomHeader";
 import font from "../../Theme/font";
 import colors from "../../Theme/colors";
@@ -20,6 +21,7 @@ const Post = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(null)
 
   useEffect(() => {
     setPosts([
@@ -71,6 +73,10 @@ const Post = () => {
 
   const addPost = async () => {
     try {
+      if(title === "" || description === ""){
+        ToastAndroid.show("Title and description are required!", ToastAndroid.LONG);
+        return;
+      }
       setLoading(true);
 
       const data = {
@@ -142,7 +148,7 @@ const Post = () => {
         <View style={{ marginTop: -100, paddingHorizontal: 16 }}>
           {!loading ? (
             posts.map((post, index) => (
-              <TouchableOpacity key={post.id}>
+              <TouchableOpacity key={post.id} onPress={()=>setModalVisible(post)}>
                 <Card
                   style={[styles.cardTodo, { marginBottom: 20 }]}
                 >
@@ -178,6 +184,14 @@ const Post = () => {
         </View>
         <View style={{ height: 50 }}></View>
       </ScrollView>
+      {modalVisible && 
+        <Modal animationType="fade" >
+          <View style={{ height:'100%', padding: 10 }}>
+            <TouchableOpacity onPress={()=>setModalVisible(null)} hitSlop={20}><Icon name="close" style={{marginLeft:'auto', marginBottom:10}}/></TouchableOpacity>
+            <Text numberOfLines={3} style={{fontWeight:'600', color:'#000000'}}>{modalVisible.title}</Text>
+            <Text  style={{color:'#000000', marginTop:40, textAlign:'justify'}}>{modalVisible.body}</Text>
+          </View>
+        </Modal>}
     </>
   );
 };
